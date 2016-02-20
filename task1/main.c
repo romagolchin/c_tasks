@@ -30,6 +30,11 @@ int main(int argc, const char* argr[]) {
                     printf("%d ", t[j][i]);
                 printf("\n");
             }
+		free(t);
+        }
+        else {
+            free(t);
+            return 0;
         }
 	}
 	return 0;
