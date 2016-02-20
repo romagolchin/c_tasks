@@ -3,25 +3,24 @@
 
 int main(int argc, const char* argr[]) {
 	int n, left, right, top, bottom;
-	for(;;) {
-	        scanf("%d", &n);
-	        int** t = (int**) malloc(sizeof(int*) * n);
-	        int** cur = t;
-	        int it = 0;
-	        if(!cur)
-	            return -1;
-	        while(it < n) {
-	            int* cur1 = *cur = (int*) malloc(sizeof(int) * n);
-	            if(!cur1)
-	                return -1;
-	            ++cur;
-	            ++it;
-	        }
-	
-	        for(int i = 0; i < n; ++i) {
-	            for(int j = 0; j < n; ++j)
-	                t[i][j] = (i + 1) * (j + 1);
-	        }
+        scanf("%d", &n);
+        int** t = (int**) malloc(sizeof(int*) * n);
+        int** cur = t;
+        int it = 0;
+        if(!cur)
+            return -1;
+        while(it < n) {
+            int* cur1 = *cur = (int*) malloc(sizeof(int) * n);
+            if(!cur1)
+                return -1;
+            ++cur;
+            ++it;
+        }
+        for(int i = 0; i < n; ++i) {
+            for(int j = 0; j < n; ++j)
+                t[i][j] = (i + 1) * (j + 1);
+        }
+	for(;;){
 	        scanf("%d", &left);
 	        if(left) {
 	            scanf("%d%d%d", &top, &right, &bottom);
@@ -30,12 +29,12 @@ int main(int argc, const char* argr[]) {
 	                    printf("%d ", t[j][i]);
 	                printf("\n");
 	            }
-			free(t);
 	        }
 	        else {
 	            free(t);
 	            return 0;
-	        }
+        	}
 	}
+	free(t);
 	return 0;
 }
