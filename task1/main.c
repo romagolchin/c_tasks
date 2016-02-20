@@ -21,20 +21,28 @@ int main(int argc, const char* argr[]) {
                 t[i][j] = (i + 1) * (j + 1);
         }
 	for(;;){
-	        scanf("%d", &left);
-	        if(left) {
-	            scanf("%d%d%d", &top, &right, &bottom);
-	            for(int j = top - 1; j < bottom; ++j) {
-	                for(int i = left - 1; i < right; ++i)
-	                    printf("%d ", t[j][i]);
-	                printf("\n");
-	            }
-	        }
-	        else {
-	            free(t);
-	            return 0;
-        	}
+        scanf("%d", &left);
+        if(left) {
+            scanf("%d%d%d", &top, &right, &bottom);
+            for(int j = top - 1; j < bottom; ++j) {
+                for(int i = left - 1; i < right; ++i)
+                    printf("%d ", t[j][i]);
+                printf("\n");
+            }
+        }
+        else {
+            free(t);
+		while(it < n) {
+                free(cur);
+                ++cur;
+            }
+            return 0;
+        }
 	}
 	free(t);
+	while(it < n) {
+                free(cur);
+                ++cur;
+        }
 	return 0;
 }
