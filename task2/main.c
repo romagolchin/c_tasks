@@ -21,7 +21,6 @@ int is_name(char *s) {
 		if(!isalpha(s[i]) )
 			return 0;
 	return 1;
-
 }
 int is_phone(char *s) {
 	int k = 0, j = 0;
@@ -48,10 +47,10 @@ int is_id(char *s) {
 }
 		
 char *lower(char *s) {
-	char res[BUF];
+	char *res = (char *) malloc(strlen(s) * sizeof(char));
 	for(int i = 0; i < strlen(s); ++i) {
 		if(s[i] - 'A' >= 0 && s[i] - 'A' < 26)
-			res[i] -= s[i] - 'A' + 'a';
+			res[i] = s[i] - 'A' + 'a';
 		else
 			res[i] = s[i];
 	}	
@@ -59,13 +58,17 @@ char *lower(char *s) {
 }				
 
 void find_by_name(char *name_part) {
-	for(int i = 0; i < N; ++i)
+	//printf("Found by name %s:\n", name_part);
+	for(int i = 1; i < N; ++i) {
+		if(strstr(lower(people[i].name), lower(name_part)))
+			printf("%s is substring of %s\n", lower(name_part), lower(people[i].name));
 		if(strstr(lower(people[i].name), lower(name_part)) && people[i].id != -1) 
 			printf("%d %s %s\n", people[i].id, people[i].name, people[i].phone); 
+	}
 }
 
 char *trim(char *phone) {
-	char res[BUF];
+	char *res = (char *) malloc(strlen(phone) * sizeof(char));
 	int cnt = 0;
 	for(int i = 0; i < strlen(phone); ++i) 
 		if(isdigit(phone[i]))
@@ -75,7 +78,8 @@ char *trim(char *phone) {
 
 
 void find_by_phone(char *phone) {
-	for(int i = 0; i < N; ++i) 
+	//printf("Found by phone %s:\n", phone);
+	for(int i = 1; i < N; ++i) 
 		if(!strcmp(people[i].phone, phone)  && people[i].id != -1) 
 			printf("%d %s %s\n", people[i].id, people[i].name, people[i].phone);
 }
@@ -88,16 +92,20 @@ void create(char *name, char *phone) {
 		if(people[i].id != -1) {
 			used[people[i].id] = 1;
 			++sz;
-		}
+		}       /*
 	for(int i = 0; i < N; ++i)
 		if(!used[i]) {
 			uuid = i;
 			break;
-		}
-	printf("%d %d\n", sz, uuid);
+		}             */
+	//printf("%d %d\n", sz, uuid);
 	people[sz].id = uuid;
 	strcpy(people[sz].name, name);
 	strcpy(people[sz].phone, phone);	
+	for(int i = 0; i < N; ++i) {
+		if(people[i].id != -1)
+			printf("%d %s %s\n", people[i].id, people[i].name, people[i].phone);
+	}
 }
 
 void delete(int id) {
@@ -123,6 +131,7 @@ void change(int id, char *name, char *phone, int t) {                           
 int main(int argc, const char *argv[]) {
 	FILE *fp = fopen(argv[1], "r+");
 	assert(fp);
+	char s[BUF];
 	char cmd[BUF], name_part[BUF], name[BUF], phone[BUF], id[BUF], str[BUF];
 	int id_int, cnt = 0;
 	int i;
@@ -172,17 +181,27 @@ int main(int argc, const char *argv[]) {
 				change(atoi(id), trim(str), trim(str), 1);
 		}
 	    else if(!strcmp(cmd, "exit")) {
-	    	for(i = 0; i < N; ++i) 
+	    	fclose(fp);
+	    	FILE *fpw = fopen(argv[1], "w");
+	    	for(i = 1; i < N; ++i) 
 				if(people[i].id != -1) {
-					printf("%d %d %s %s\n", i, people[i].id, people[i].name, people[i].phone);
-					fprintf(fp, "%d %s %s\n", people[i].id, people[i].name, people[i].phone);
+					//printf("%d %d %s %s\n", i, people[i].id, people[i].name, people[i].phone);
+					fprintf(fpw, "%d %s %s\n", people[i].id, people[i].name, people[i].phone);
 				}
-			fclose(fp);
+			fclose(fpw);                   
 			return 0;
 	    }
 		else
 			printf("Try again\n");
 			
 	}
+	fclose(fp);
+	FILE *fpw = fopen(argv[1], "w");
+	for(i = 1; i < N; ++i) 
+		if(people[i].id != -1) {
+			//printf("%d %d %s %s\n", i, people[i].id, people[i].name, people[i].phone);
+			fprintf(fpw, "%d %s %s\n", people[i].id, people[i].name, people[i].phone);
+		}
+	fclose(fpw);                   
 	return 0;
 }
