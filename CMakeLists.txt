@@ -1,18 +1,10 @@
 cmake_minimum_required(VERSION 3.3)
-project(hw2)
+project(rational)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(CMAKE_C_FLAGS "-std=c99")
+set(SOURCE_FILES rational.cpp)
+set(HEADER_FILES rational.h)
+add_library(rational ${SOURCE_FILES} ${HEADER_FILES})
+#add_executable(rational ${SOURCE_FILES})
 
-#set_property(TARGET hw2 PROPERTY C_STANDARD 99)
-
-set(SOURCE_FILES
-    #demo.c
-    main.c
-    #main1.c
-    phonebook
-    #test
-        )
-
-add_executable(hw2 ${SOURCE_FILES})
