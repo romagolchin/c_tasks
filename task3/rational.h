@@ -29,10 +29,14 @@ rational::rational(int n) {
     denom = 1;
 }
 
-rational::rational(int nm, int dnm) {
-    int d = gcd(abs(nm), abs(dnm));
-    num = nm / d;
-    denom = dnm / d;
+rational::rational(int num, int denom) {
+    int d = gcd(abs(num), abs(denom));
+	if(num < 0 && denom < 0) {
+		num = -num;
+		denom = -denom;
+	}
+    this->num = num / d;
+    this->denom = denom / d;
 }
 
 int rational::getNum() const {
