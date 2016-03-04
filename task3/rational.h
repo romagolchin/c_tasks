@@ -8,9 +8,9 @@ public:
 
     rational(int num, int denom);
 
-    int getNum();
+    int getNum() const;
 
-    int getDenom();
+    int getDenom() const;
 
     rational operator+(const rational &frac);
 
@@ -32,11 +32,11 @@ rational::rational(int num, int denom) {
     denom = denom / d;
 }
 
-int rational::getNum() {
+int rational::getNum() const {
     return num;
 }
 
-int rational::getDenom() {
+int rational::getDenom() const {
     return denom;
 }
 
