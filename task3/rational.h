@@ -1,4 +1,7 @@
 #include <stdlib.h>
+#include <bits/stdc++.h>
+
+using namespace std;
 
 class rational {
     int num, denom;
@@ -26,10 +29,10 @@ rational::rational(int n) {
     denom = 1;
 }
 
-rational::rational(int num, int denom) {
-    int d = gcd(num, denom);
-    num = num / d;
-    denom = denom / d;
+rational::rational(int nm, int dnm) {
+    int d = gcd(abs(nm), abs(dnm));
+    num = nm / d;
+    denom = dnm / d;
 }
 
 int rational::getNum() const {
@@ -49,7 +52,7 @@ rational rational::operator-(const rational &frac) const {
 }
 
 rational rational::operator*(const rational &frac) const {
-    return rational(num * frac.num, denom * frac.denom);
+    return rational(this->num * frac.num, this->denom * frac.denom);
 }
 
 rational rational::operator/(const rational &frac) const {
@@ -57,7 +60,5 @@ rational rational::operator/(const rational &frac) const {
 }
 
 int rational::gcd(int a, int b) {
-    a = abs(a);
-    b = abs(b);
-    return a ? gcd(a, b % a) : b;
+    return a ? gcd(b % a, a) : b;
 }
