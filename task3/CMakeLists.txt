@@ -7,4 +7,9 @@ set(SOURCE_FILES rational.cpp)
 set(HEADER_FILES rational.h)
 add_library(rational ${SOURCE_FILES} ${HEADER_FILES})
 #add_executable(rational ${SOURCE_FILES})
+
+set(CMAKE_INSTALL_PREFIX C:/Users/romag_000/rational)
+
 set(CMAKE_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include)
+install(TARGETS rational DESTINATION lib)
+install(FILES include/rational.h DESTINATION include)
