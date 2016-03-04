@@ -39,10 +39,9 @@ void Person_out(struct person *p) {
 
 int lst_size = 0;
 struct person *first, *last;
-int i;
 
 int is_name(char *s) {
-    for (i = 0; i < strlen(s); ++i)
+    for (int i = 0; i < strlen(s); ++i)
         if (!isalpha(s[i]))
             return 0;
     return 1;
@@ -51,7 +50,7 @@ int is_name(char *s) {
 int is_phone(char *s) {
     int k = 0, j = 0;
     int par0 = 0, par1 = 0;
-    for (i = 0; i < strlen(s); ++i) {
+    for (int i = 0; i < strlen(s); ++i) {
         if (isdigit(s[i]) || ((s[i] == '-') && ((i > 0 && s[i - 1] != '-') || (i == 0))) || (s[i] == '(') ||
             (s[i] == ')') || (s[i] == '+'))
             ++k;
@@ -67,7 +66,7 @@ int is_phone(char *s) {
 
 int is_id(char *s) {
     int k = 0;
-    for (i = 0; i < strlen(s); ++i)
+    for (int i = 0; i < strlen(s); ++i)
         if (isdigit(s[i]))
             ++k;
     return (k == strlen(s));
@@ -75,7 +74,7 @@ int is_id(char *s) {
 
 char *lower(char *s) {
     char *res = (char *) malloc(strlen(s) * sizeof(char));
-    for (i = 0; i < strlen(s); ++i) {
+    for (int i = 0; i < strlen(s); ++i) {
         res[i] = s[i] - 'A' >= 0 && s[i] - 'A' < 26 ? s[i] - 'A' + 'a' : s[i];
     }
     return res;
@@ -93,7 +92,7 @@ void find_by_name(char *name_part) {
 char *trim(char *phone) {
     char *res = (char *) malloc(strlen(phone) * sizeof(char));
     int cnt = 0;
-    for (i = 0; i < strlen(phone); ++i)
+    for (int i = 0; i < strlen(phone); ++i)
         if (isdigit(phone[i]) || phone[i] == '+')
             res[cnt++] = phone[i];
     return res;
@@ -115,7 +114,7 @@ int used[N];
 
 void create(char *name, char *phone) {
     struct person *cur = first;
-    for(i = 0; i < lst_size; ++i) {
+    for(int i = 0; i < lst_size; ++i) {
         used[cur->next->id] = 1;
         cur = cur->next;
     }
@@ -133,7 +132,7 @@ void create(char *name, char *phone) {
 
 void delete(int id) {
     struct person *cur = first;
-    for(i = 0; i < lst_size; ++i) {
+    for(int i = 0; i < lst_size; ++i) {
         if(id == cur->next->id) {
 			//printf("attempt to delete ");
 			Person_out(cur->next);
@@ -154,18 +153,18 @@ void delete(int id) {
 
 void change(int id, char *name, char *phone, int t) {                            // 1 - name, 2 - phone
     struct person *cur = first->next;
-    for(i = 0; i < lst_size; ++i) {
+    for(int i = 0; i < lst_size; ++i) {
         if(cur->id == id) {
             if (t == 1) {
 				//printf("id is %d, changing name\n", id);
-				realloc(cur->name, strlen(name) * sizeof(char));
+				cur->name = realloc(cur->name, strlen(name) * sizeof(char));
 				for(int j = 0; j < strlen(name); ++j)
 					(cur->name)[j] = name[j];
 				(cur->name)[strlen(name)] = '\0';
                 //printf("%s\n", cur->name);
 			}
             else {
-				realloc(cur->phone, strlen(phone) * sizeof(char));
+				cur->phone = realloc(cur->phone, strlen(phone) * sizeof(char));
                 for(int j = 0; j < strlen(phone); ++j)
 					(cur->phone)[j] = phone[j];
 				(cur->phone)[strlen(phone)] = '\0';
@@ -223,7 +222,7 @@ void output(const char *file_name) {
     assert(fp);
     struct person *cur = first->next;
 	//printf("size is %d\n", lst_size); 
-    for(i = 0; i < lst_size; ++i) {
+    for(int i = 0; i < lst_size; ++i) {
         fprintf(fp, "%d %s %s\n", cur->id, cur->name, cur->phone);
         cur = cur->next;
     }
