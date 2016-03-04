@@ -12,13 +12,13 @@ public:
 
     int getDenom() const;
 
-    rational operator+(const rational &frac);
+    rational operator+(const rational &frac) const;
 
-    rational operator-(const rational &frac);
+    rational operator-(const rational &frac) const;
 
-    rational operator*(const rational &frac);
+    rational operator*(const rational &frac) const;
 
-    rational operator/(const rational &frac);
+    rational operator/(const rational &frac) const;
 };
 
 rational::rational(int n) {
@@ -40,19 +40,19 @@ int rational::getDenom() const {
     return denom;
 }
 
-rational rational::operator+(const rational &frac) {
+rational rational::operator+(const rational &frac) const {
     return rational(num * frac.denom + denom * frac.num, frac.num * num);
 }
 
-rational rational::operator-(const rational &frac) {
+rational rational::operator-(const rational &frac) const {
     return rational(num * frac.denom - denom * frac.num, frac.num * num);
 }
 
-rational rational::operator*(const rational &frac) {
+rational rational::operator*(const rational &frac) const {
     return rational(num * frac.num, denom * frac.denom);
 }
 
-rational rational::operator/(const rational &frac) {
+rational rational::operator/(const rational &frac) const {
     return rational(num * frac.denom, denom * frac.num);
 }
 
