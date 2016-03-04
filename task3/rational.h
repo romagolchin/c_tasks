@@ -12,13 +12,13 @@ public:
 
     int getDenom();
 
-    rational operator+(rational &frac);
+    rational operator+(const rational &frac);
 
-    rational operator-(rational &frac);
+    rational operator-(const rational &frac);
 
-    rational operator*(rational &frac);
+    rational operator*(const rational &frac);
 
-    rational operator/(rational &frac);
+    rational operator/(const rational &frac);
 };
 
 rational::rational(int n) {
@@ -28,8 +28,8 @@ rational::rational(int n) {
 
 rational::rational(int num, int denom) {
     int d = gcd(num, denom);
-    this->num = num / d;
-    this->denom = denom / d;
+    num = num / d;
+    denom = denom / d;
 }
 
 int rational::getNum() {
@@ -40,20 +40,20 @@ int rational::getDenom() {
     return denom;
 }
 
-rational rational::operator+(rational &frac) {
-    return rational(this->num * frac.denom + this->denom * frac.num, frac.num * this->num);
+rational rational::operator+(const rational &frac) {
+    return rational(num * frac.denom + denom * frac.num, frac.num * num);
 }
 
-rational rational::operator-(rational &frac) {
-    return rational(this->num * frac.denom - this->denom * frac.num, frac.num * this->num);
+rational rational::operator-(const rational &frac) {
+    return rational(num * frac.denom - denom * frac.num, frac.num * num);
 }
 
-rational rational::operator*(rational &frac) {
-    return rational(this->num * frac.num, this->denom * frac.denom);
+rational rational::operator*(const rational &frac) {
+    return rational(num * frac.num, denom * frac.denom);
 }
 
-rational rational::operator/(rational &frac) {
-    return rational(this->num * frac.denom, this->denom * frac.num);
+rational rational::operator/(const rational &frac) {
+    return rational(num * frac.denom, denom * frac.num);
 }
 
 int rational::gcd(int a, int b) {
