@@ -44,15 +44,15 @@ int rational::getDenom() const {
 }
 
 rational rational::operator+(const rational &frac) const {
-    return rational(num * frac.denom + denom * frac.num, frac.num * num);
+    return rational(num * frac.denom + denom * frac.num, frac.denom * denom);
 }
 
 rational rational::operator-(const rational &frac) const {
-    return rational(num * frac.denom - denom * frac.num, frac.num * num);
+    return rational(num * frac.denom - denom * frac.num, frac.denom * denom);
 }
 
 rational rational::operator*(const rational &frac) const {
-    return rational(this->num * frac.num, this->denom * frac.denom);
+    return rational(num * frac.num, denom * frac.denom);
 }
 
 rational rational::operator/(const rational &frac) const {
