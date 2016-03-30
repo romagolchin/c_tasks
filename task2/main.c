@@ -73,10 +73,11 @@ int is_id(char *s) {
 }
 
 char *lower(char *s) {
-    char *res = (char *) malloc(strlen(s) * sizeof(char));
+    char *res = (char *) malloc((strlen(s) + 1) * sizeof(char));
     for (int i = 0; i < strlen(s); ++i) {
-        res[i] = s[i] - 'A' >= 0 && s[i] - 'A' < 26 ? s[i] - 'A' + 'a' : s[i];
+        res[i] = (char) (s[i] - 'A' >= 0 && s[i] - 'A' < 26 ? s[i] - 'A' + 'a' : s[i]);
     }
+    res[strlen(s)] = '\0';
     return res;
 }
 
@@ -114,41 +115,33 @@ int used[N];
 
 void create(char *name, char *phone) {
     struct person *cur = first;
-    for(int i = 0; i < lst_size; ++i) {
-        used[cur->next->id] = 1;
-        cur = cur->next;
-    }
+//    for(int i = 0; i < lst_size; ++i) {
+//        used[cur->next->id] = 1;
+//        cur = cur->next;
+//    }
     int uuid = 0;                                                                  //least unused identifier
     while(used[uuid])
         ++uuid;
     struct person *tmp = cur->next;
     struct person *new_el = Person(uuid, name, phone, NULL);
+    used[uuid] = 1;
     cur->next = new_el;
     new_el->next = tmp;
     lst_size++;
-	//Person_out(new_el);
-	//Person_out(new_el->next);
 }
 
 void delete(int id) {
     struct person *cur = first;
     for(int i = 0; i < lst_size; ++i) {
         if(id == cur->next->id) {
-			//printf("attempt to delete ");
-			Person_out(cur->next);
-			//printf("next is ");
-			Person_out(cur->next->next);
+            used[id] = 0;
 			struct person *tmp = cur->next; 
 			cur->next = cur->next->next;
-			//printf("replaced by: \n");
-			Person_out(cur->next);
 			lst_size--;
-			//Person_d(tmp);
 			break;
         }
         cur = cur->next;
     }
-	//printf("size is %d\n", lst_size);
 }
 
 void change(int id, char *name, char *phone, int t) {                            // 1 - name, 2 - phone
@@ -156,15 +149,13 @@ void change(int id, char *name, char *phone, int t) {                           
     for(int i = 0; i < lst_size; ++i) {
         if(cur->id == id) {
             if (t == 1) {
-				//printf("id is %d, changing name\n", id);
-				cur->name = realloc(cur->name, strlen(name) * sizeof(char));
+				cur->name = malloc((strlen(name) + 1) * sizeof(char));
 				for(int j = 0; j < strlen(name); ++j)
 					(cur->name)[j] = name[j];
 				(cur->name)[strlen(name)] = '\0';
-                //printf("%s\n", cur->name);
 			}
             else {
-				cur->phone = realloc(cur->phone, strlen(phone) * sizeof(char));
+				cur->phone = malloc((strlen(phone) + 1) * sizeof(char));
                 for(int j = 0; j < strlen(phone); ++j)
 					(cur->phone)[j] = phone[j];
 				(cur->phone)[strlen(phone)] = '\0';
@@ -210,7 +201,6 @@ void input(FILE *fp) {
             phone = read_str(1, fp);
 			if (strlen(name) && strlen(phone)) {
             	struct person *elem = Person(id, name, phone, NULL);
-				//Person_out(elem);
             	create(name, phone);     
 			}
         }
@@ -221,7 +211,6 @@ void output(const char *file_name) {
     FILE *fp = fopen(file_name, "w");
     assert(fp);
     struct person *cur = first->next;
-	//printf("size is %d\n", lst_size); 
     for(int i = 0; i < lst_size; ++i) {
         fprintf(fp, "%d %s %s\n", cur->id, cur->name, cur->phone);
         cur = cur->next;
@@ -236,11 +225,15 @@ int main(int argc, const char *argv[]) {
     char cmd[BUF], id[BUF];
     for (; ;) {
         scanf("%s", cmd);
-        if (!strcmp(cmd, "find")) {
+        if (!strcmp(cmd, "exit")) {
+            output(argv[1]);
+            return 0;
+        }
+        else if (!strcmp(cmd, "find")) {
             char *str = read_str(0, NULL);
-            while(!is_name(str) && !is_phone(str)) {
-                printf("Try again: \n");
-                str = read_str(0, NULL);
+            if (!is_name(str) && !is_phone(str)) {
+                printf("Invalid argument(s) passed to find. Try again: \n");
+                continue;
             }
             if (is_phone(str))
                 find_by_phone(str);
@@ -251,41 +244,41 @@ int main(int argc, const char *argv[]) {
         else if (!strcmp(cmd, "create")) {
             char *name = read_str(0, NULL);
             char *phone = read_str(0, NULL);
-            while (!is_name(name) || !is_phone(phone)) {
-                printf("Try again: \n");
-                name = read_str(0, NULL);
-                phone = read_str(0, NULL);
+            if (!is_name(name) || !is_phone(phone)) {
+                printf("Invalid argument(s) passed to create. Try again: \n");
+                continue;
             }
             create(name, phone);
         }
         else if (!strcmp(cmd, "delete")) {
             scanf("%s", id);
-            while (!is_id(id)) {
-                printf("Try again: \n");
-                scanf("%s", id);
+            if (!is_id(id)) {
+                printf("Invalid argument(s) passed to delete. Try again: \n");
+                continue;
             }
             delete(atoi(id));
         }
         else if (!strcmp(cmd, "change")) {
             scanf("%s", id);
+            char *t = read_str(0, NULL);
+            char name_t[5], number_t[6];
+            strcpy(name_t, "name");
+            strcpy(number_t, "number");
             char *str = read_str(0, NULL);
-            while (!is_id(id) || (!is_phone(str) && !is_name(str))) {
-                printf("Try again: \n");
-                scanf("%s", id);
-                str = read_str(0, NULL);
+            if(!(is_id(id) && ((!strcmp(t, name_t) && is_name(str)) || (!strcmp(t, number_t) && is_phone(str))))) {
+                printf("Invalid argument(s) passed to change. Try again: \n");
+                continue;
             }
-            if (is_name(str))
+            if(!strcmp(t, name_t)) {
                 change(atoi(id), str, str, 1);
-            else
+            }
+            else {
                 change(atoi(id), str, str, 2);
-        }
-        else if (!strcmp(cmd, "exit")) {
-            output(argv[1]);
-            return 0;
+            }
         }
         else {
-            printf("Try again: \n");
-            output(argv[1]);
+            printf("Invalid command name. Try again: \n");
+            continue;
 		}
     }
     return 0;
