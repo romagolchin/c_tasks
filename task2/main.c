@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 #include <ctype.h>
 
 #define BUF 256
@@ -115,10 +114,6 @@ int used[N];
 
 void create(char *name, char *phone) {
     struct person *cur = first;
-//    for(int i = 0; i < lst_size; ++i) {
-//        used[cur->next->id] = 1;
-//        cur = cur->next;
-//    }
     int uuid = 0;                                                                  //least unused identifier
     while(used[uuid])
         ++uuid;
@@ -186,7 +181,10 @@ char *read_str(int t, FILE *fp) {                                               
 }
 
 void input(FILE *fp) {
-    assert(fp);
+    if(!fp) {
+    	printf("Failed to open file\n");
+    	return;
+    }
     char *name, *phone;
     int id;
     char s[1], t[1];
@@ -209,7 +207,10 @@ void input(FILE *fp) {
 
 void output(const char *file_name) {
     FILE *fp = fopen(file_name, "w");
-    assert(fp);
+    if(!fp) {
+    	printf("Failed to open file\n");
+    	return;
+    }
     struct person *cur = first->next;
     for(int i = 0; i < lst_size; ++i) {
         fprintf(fp, "%d %s %s\n", cur->id, cur->name, cur->phone);
