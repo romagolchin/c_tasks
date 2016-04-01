@@ -185,6 +185,7 @@ void input(FILE *fp) {
     	printf("Failed to open file\n");
     	return;
     }
+    rewind(fp);
     char *name, *phone;
     int id;
     char s[1], t[1];
@@ -221,7 +222,9 @@ void output(const char *file_name) {
 
 
 int main(int argc, const char *argv[]) {
-    FILE *fp = fopen(argv[1], "r+");
+	char filename[BUF];
+	strcpy(filename, (argc > 1) ? argv[1] : "phonebook.txt");
+    FILE *fp = fopen(filename, "r+");
     input(fp);
     char cmd[BUF], id[BUF];
     for (; ;) {
@@ -262,18 +265,20 @@ int main(int argc, const char *argv[]) {
         else if (!strcmp(cmd, "change")) {
             scanf("%s", id);
             char *t = read_str(0, NULL);
-            char name_t[5], number_t[6];
+            char name_t[5], number_t[7];
             strcpy(name_t, "name");
             strcpy(number_t, "number");
             char *str = read_str(0, NULL);
-            if(!(is_id(id) && ((!strcmp(t, name_t) && is_name(str)) || (!strcmp(t, number_t) && is_phone(str))))) {
-                printf("Invalid argument(s) passed to change. Try again: \n");
+           	printf("%d %d %d\n", strlen(t), strlen(name_t), strlen(number_t));
+            if(!(is_id(id) && ( (!strcmp(t, name_t) && is_name(str)) || (!strcmp(t, number_t) && is_phone(str) ) ) ) ) {
+                printf("%d\n", !strcmp(t, name_t));
+            	printf("Invalid argument(s) passed to change. Try again: \n");
                 continue;
             }
             if(!strcmp(t, name_t)) {
                 change(atoi(id), str, str, 1);
             }
-            else {
+            if(!strcmp(t, number_t)) {
                 change(atoi(id), str, str, 2);
             }
         }
