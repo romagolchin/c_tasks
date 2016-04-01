@@ -269,9 +269,9 @@ int main(int argc, const char *argv[]) {
             strcpy(name_t, "name");
             strcpy(number_t, "number");
             char *str = read_str(0, NULL);
-           	printf("%d %d %d\n", strlen(t), strlen(name_t), strlen(number_t));
+           	//printf("%d %d %d\n", strlen(t), strlen(name_t), strlen(number_t));
             if(!(is_id(id) && ( (!strcmp(t, name_t) && is_name(str)) || (!strcmp(t, number_t) && is_phone(str) ) ) ) ) {
-                printf("%d\n", !strcmp(t, name_t));
+                //printf("%d\n", !strcmp(t, name_t));
             	printf("Invalid argument(s) passed to change. Try again: \n");
                 continue;
             }
