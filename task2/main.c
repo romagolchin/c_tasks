@@ -32,8 +32,11 @@ void Person_d(struct person *p) {
     free(p);
 }
 
+
+char *trim(char *phone);
+
 void Person_out(struct person *p) {
-    printf("%d %s %s\n", p->id, p->name, p->phone);
+    printf("%d %s %s\n", p->id, p->name, trim(p->phone));
 }
 
 int lst_size = 0;
@@ -95,6 +98,7 @@ char *trim(char *phone) {
     for (int i = 0; i < strlen(phone); ++i)
         if (isdigit(phone[i]) || phone[i] == '+')
             res[cnt++] = phone[i];
+    res[cnt] = '\0';
     return res;
 }
 
@@ -204,6 +208,7 @@ void input(FILE *fp) {
 			}
         }
     }
+    fclose(fp);
 }
 
 void output(const char *file_name) {
@@ -213,6 +218,7 @@ void output(const char *file_name) {
     	return;
     }
     struct person *cur = first->next;
+    printf("%d\n", lst_size);
     for(int i = 0; i < lst_size; ++i) {
         fprintf(fp, "%d %s %s\n", cur->id, cur->name, cur->phone);
         cur = cur->next;
