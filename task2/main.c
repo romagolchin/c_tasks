@@ -224,7 +224,7 @@ void output(const char *file_name) {
 int main(int argc, const char *argv[]) {
 	char filename[BUF];
 	strcpy(filename, (argc > 1) ? argv[1] : "phonebook.txt");
-    FILE *fp = fopen(filename, "r+");
+    FILE *fp = fopen(filename, "a+");
     input(fp);
     char cmd[BUF], id[BUF];
     for (; ;) {
