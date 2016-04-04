@@ -292,6 +292,7 @@ int main(int argc, const char *argv[]) {
             printf("Invalid command name. Try again: \n");
             continue;
 		}
+		fflush(stdout);
     }
     return 0;
 }
