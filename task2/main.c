@@ -96,7 +96,7 @@ char *trim(char *phone) {
     char *res = (char *) malloc(strlen(phone) * sizeof(char));
     int cnt = 0;
     for (int i = 0; i < strlen(phone); ++i)
-        if (isdigit(phone[i]) || phone[i] == '+')
+        if (isdigit(phone[i]))
             res[cnt++] = phone[i];
     res[cnt] = '\0';
     return res;
@@ -218,7 +218,6 @@ void output(const char *file_name) {
     	return;
     }
     struct person *cur = first->next;
-    printf("%d\n", lst_size);
     for(int i = 0; i < lst_size; ++i) {
         fprintf(fp, "%d %s %s\n", cur->id, cur->name, cur->phone);
         cur = cur->next;
