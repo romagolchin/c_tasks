@@ -36,7 +36,7 @@ void Person_d(struct person *p) {
 char *trim(char *phone);
 
 void Person_out(struct person *p) {
-    printf("%d %s %s\n", p->id, p->name, trim(p->phone));
+    printf("%d %s %s\n", p->id, p->name, p->phone);
 }
 
 int lst_size = 0;
