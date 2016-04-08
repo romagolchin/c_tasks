@@ -108,7 +108,6 @@ void find_by_phone(char *phone) {
     for(int j = 0; j < lst_size; ++j) {
 		if(!strcmp(trim(phone), trim(cur->phone) ) ) {
             Person_out(cur);
-			break;
 		}
         cur = cur->next;
     }
