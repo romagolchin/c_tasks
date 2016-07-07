@@ -1,6 +1,4 @@
 #include "lazy_string.h"
-#define DEBUG 1
-#undef DEBUG
 using namespace std;
 
 lazy_char::lazy_char(lazy_string* hs, size_t pos) :
@@ -26,7 +24,6 @@ lazy_char& lazy_char::operator=(char c) {
 	}
 	*(host_str->s + pos) = c;
 	host_str->s[host_str->len] = '\0';
-	//
 	return *this;
 }
 
@@ -36,62 +33,29 @@ std::ostream& operator<<(std::ostream& stream, lazy_char lc) {
 }
 
 lazy_string::lazy_string(std::string str) {
-	//cerr << __func__ << endl;
-	//cerr << __func__ << endl;
-	cerr << "from std::string" << endl;
-	//fflush(stdout);
-
 	len = str.length();
 	s = new char[len + 1];
-	assert(s);
 	for(size_t i = 0; i < len; ++i)
 		s[i] = str[i];
 	s[len] = '\0';
 	has_reference = 0;
-	// origin = 0;
 }
 
 lazy_string::lazy_string(char *s, size_t len, bool has_reference, lazy_string* origin):
 s(s), len(len), has_reference(has_reference), origin(origin)
-{//cerr << __func__ << endl;
-//cerr << has_reference << endl;
-//this->out();
+{
 }
 
 lazy_string::lazy_string(const lazy_string& source) {
 	using namespace std;
-	// #ifdef DEBUG 
-	cerr << "copy constructor" << endl;
-	//fflush(stdout);
-	// #endif
 	s = source.s;
 	len = source.len;
 	has_reference = 1;
 	lazy_string* ptr = source;
-	// origin = &source;
-	// origin = ptr;
 }
 
 lazy_string& lazy_string::operator=(lazy_string& source) {
 	using namespace std;
-		cerr << __func__ << endl;
-
-	#ifdef DEBUG 
-	//fflush(stdout);
-
-	this->out();
-	//fflush(stdout);
-	source.out();
-	//fflush(stdout);
-
-	#endif
-	// #ifdef DEBUG 
-	// if(!s)
-	// 	//printf("null\n");
-	// else
-	// 	//printf("%p\n", s);
-	// #endif
-	// delete [] s;
 	if(s) {
 		delete [] s;
 	}
@@ -99,11 +63,6 @@ lazy_string& lazy_string::operator=(lazy_string& source) {
 	len = source.len;
 	has_reference = 1;
 	origin = &source;
-	this->out();
-	//fflush(stdout);
-	//printf("%s\n", s);
-	//fflush(stdout);
-
 	return *this;
 }
 
@@ -121,10 +80,10 @@ lazy_char lazy_string::at(size_t pos) {
 	return (*this)[pos];
 }
 
-// lazy_string::operator std::string() {
-// 	cerr << "cast to string" << endl;
-// 	return std::string(s).substr(0, len);
-// }
+lazy_string::operator std::string() {
+	cerr << "cast to string" << endl;
+	return std::string(s).substr(0, len);
+}
 
 lazy_string lazy_string::substr(size_t pos, size_t len) {
 	//printf("%p %d %d %p\n", s, pos, len, this);
@@ -136,13 +95,6 @@ lazy_string lazy_string::substr(size_t pos, size_t len) {
 }
 
 lazy_string::~lazy_string() {
-	#ifdef DEBUG 
-	//cerr << __func__ << endl;
-	//fflush(stdout);
-	//printf("%p\n", s);
-	//fflush(stdout);
-
-	#endif
 	if(!has_reference){
 		delete [] s;
 	}
