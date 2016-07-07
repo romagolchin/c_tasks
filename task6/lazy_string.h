@@ -1,6 +1,8 @@
 #include <string>
 #include <iostream>
 #include <ostream>
+#include <stdexcept>
+#include <exception>
 #include <assert.h>
 #pragma once
 using namespace std;
