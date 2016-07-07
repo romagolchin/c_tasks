@@ -16,14 +16,15 @@ lazy_char::operator char() {
 lazy_char& lazy_char::operator=(char c) {
 	//printf("%s %c\n", __func__, c);
 	if(host_str->has_reference) {
-		host_str->s = new char[host_str->len + 1];
+		char* s_changed = new char[host_str->len + 1];
 		for(size_t i = 0; i < host_str->len; ++i)
-			host_str->s[i] = host_str->origin->s[i];
-		host_str->has_reference = 0;
-		host_str->origin = 0;	
+			s_changed[i] = host_str->s[i];
+		host_str->s = s_changed;
+		host_str->has_reference = 0;	
 	}
 	*(host_str->s + pos) = c;
 	host_str->s[host_str->len] = '\0';
+	//
 	return *this;
 }
 
@@ -33,36 +34,69 @@ std::ostream& operator<<(std::ostream& stream, lazy_char lc) {
 }
 
 lazy_string::lazy_string(std::string str) {
+	//cerr << __func__ << endl;
+	//cerr << __func__ << endl;
+	cerr << "from std::string" << endl;
+	//fflush(stdout);
+
 	len = str.length();
 	s = new char[len + 1];
+	assert(s);
 	for(size_t i = 0; i < len; ++i)
 		s[i] = str[i];
 	s[len] = '\0';
 	has_reference = 0;
 }
 
-lazy_string::lazy_string(char *s, size_t len, bool has_reference, lazy_string* origin):
-s(s), len(len), has_reference(has_reference), origin(origin)
-{
+lazy_string::lazy_string(char *s, size_t len, bool has_reference):
+s(s), len(len), has_reference(has_reference)
+{//cerr << __func__ << endl;
+//cerr << has_reference << endl;
+//this->out();
 }
 
 lazy_string::lazy_string(const lazy_string& source) {
 	using namespace std;
+	// #ifdef DEBUG 
+	cerr << "copy constructor" << endl;
+	//fflush(stdout);
+	// #endif
 	s = source.s;
 	len = source.len;
 	has_reference = 1;
-	lazy_string* ptr = source;
 }
 
 lazy_string& lazy_string::operator=(lazy_string& source) {
 	using namespace std;
+		cerr << __func__ << endl;
+
+	#ifdef DEBUG 
+	//fflush(stdout);
+
+	this->out();
+	//fflush(stdout);
+	source.out();
+	//fflush(stdout);
+
+	#endif
+	// #ifdef DEBUG 
+	// if(!s)
+	// 	//printf("null\n");
+	// else
+	// 	//printf("%p\n", s);
+	// #endif
+	// delete [] s;
 	if(s) {
 		delete [] s;
 	}
 	s = source.s;
 	len = source.len;
 	has_reference = 1;
-	origin = &source;
+	this->out();
+	//fflush(stdout);
+	//printf("%s\n", s);
+	//fflush(stdout);
+
 	return *this;
 }
 
@@ -90,11 +124,33 @@ lazy_string lazy_string::substr(size_t pos, size_t len) {
 	cerr << __func__ << endl;
 	if(len > this->len)
 		throw length_error("failed to take substring longer than string itself\n");
-	lazy_string ret(s + pos, len, 1, this);
+	lazy_string ret(s + pos, len, 1);
 	return ret;
 }
 
+
+istream& operator>>(istream& stream, lazy_string& ls) {
+	string str;
+	stream >> str;
+	lazy_string tmp(str);
+	// ls = lazy_string(str);
+	ls = tmp;
+	return stream;
+}
+
+ostream& operator<< (ostream& stream, lazy_string& ls) {
+	stream << (string) ls;
+	return stream;
+}
+
 lazy_string::~lazy_string() {
+	#ifdef DEBUG 
+	//cerr << __func__ << endl;
+	//fflush(stdout);
+	//printf("%p\n", s);
+	//fflush(stdout);
+
+	#endif
 	if(!has_reference){
 		delete [] s;
 	}
