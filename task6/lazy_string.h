@@ -2,6 +2,8 @@
 #include <iostream>
 #include <ostream>
 #include <assert.h>
+#pragma once
+
 using namespace std;
 
 class lazy_char;
@@ -21,14 +23,12 @@ public:
 	lazy_char at(size_t);
 	lazy_char operator[](size_t);
 	lazy_string substr(size_t pos, size_t len);
-	// operator std::string();
+	operator std::string();
 	lazy_string& operator=(lazy_string &source);
 	~lazy_string();
 	char* get_s(){return s;}
 	void out() {cerr << "out: " << s << ' ' << len << ' ' << has_reference << ' ' << origin << endl;}
-		// printf("out: %p %d %d %p\n", s, len, has_reference, origin);}
 	friend class lazy_char;
-	//TODO: at, substr, operator string
 };
 
 struct lazy_char {
