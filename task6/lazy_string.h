@@ -3,7 +3,6 @@
 #include <ostream>
 #include <assert.h>
 #pragma once
-
 using namespace std;
 
 class lazy_char;
@@ -11,11 +10,9 @@ class lazy_char;
 class lazy_string {
 	char* s;
 	size_t len;
-	bool has_reference;
-	lazy_string* origin;
-	
+	bool has_reference;	
 public:
-	lazy_string(char *s, size_t len, bool, lazy_string*);
+	lazy_string(char *s, size_t len, bool);
 	lazy_string(std::string);
 	lazy_string(const lazy_string& );
 	size_t size();
@@ -26,9 +23,11 @@ public:
 	operator std::string();
 	lazy_string& operator=(lazy_string &source);
 	~lazy_string();
-	char* get_s(){return s;}
-	void out() {cerr << "out: " << s << ' ' << len << ' ' << has_reference << ' ' << origin << endl;}
+	void out() {cerr << "out: " << s << ' ' << len << ' ' << has_reference << endl;}
+		// printf("out: %p %d %d %p\n", s, len, has_reference, origin);}
 	friend class lazy_char;
+	friend istream& operator>>(istream&, lazy_string&);
+	friend ostream& operator<<(ostream&, lazy_string&);
 };
 
 struct lazy_char {
