@@ -27,6 +27,9 @@ int main(int argc, char const *argv[]) {
 	// catch (const length_error le) {
 	// 	cerr << le.what() << endl;
 	// }
+	cerr << "Expected" << endl;
+	// (lazy_string(t.get_s() + 1, 4, 1)).out();
+	cerr << "Reality" << endl;
 	// lazy_string r = t;
 	// const lazy_string& ref = t.substr(1, 4);
 	// lazy_string r (ref);
@@ -37,6 +40,9 @@ int main(int argc, char const *argv[]) {
 	// printf("%c\n", (char) t[2]);
 	// printf("%c\n", (char) t[3]);
 	// printf("%d\n", (int) t.size());
+	// lazy_string as("");
+	// cin >> as;
+	// cout << as;
 	// string my_str = (string) r;
 	// cout << my_str << endl;
 	// r.out();
