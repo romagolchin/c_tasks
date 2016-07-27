@@ -27,9 +27,6 @@ int main(int argc, char const *argv[]) {
 	// catch (const length_error le) {
 	// 	cerr << le.what() << endl;
 	// }
-	cerr << "Expected" << endl;
-	(lazy_string(t.get_s() + 1, 4, 1)).out();
-	cerr << "Reality" << endl;
 	// lazy_string r = t;
 	// const lazy_string& ref = t.substr(1, 4);
 	// lazy_string r (ref);
