@@ -37,9 +37,6 @@ int main(int argc, char const *argv[]) {
 	// printf("%c\n", (char) t[2]);
 	// printf("%c\n", (char) t[3]);
 	// printf("%d\n", (int) t.size());
-	lazy_string as("");
-	cin >> as;
-	cout << as;
 	// string my_str = (string) r;
 	// cout << my_str << endl;
 	// r.out();
