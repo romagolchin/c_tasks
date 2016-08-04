@@ -1,3 +1,6 @@
+#ifndef ITMO_CPP_FORMAT_H
+#define ITMO_CPP_FORMAT_H
+
 #include <limits>
 #include <cstdint>
 #include <iostream>
@@ -242,3 +245,5 @@ typename enable_if<!is_same<W, int>::value || !is_same<P, int>::value, string>::
 format_impl_2(format_properties &props, string const &fmt, W width, P precision, Head h, Tail... t) {
 	throw invalid_argument("either width or precision is not integer");
 }
+
+#endif
