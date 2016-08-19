@@ -5,38 +5,36 @@
 #include <ostream>
 #include <assert.h>
 #include <stdexcept>
-using namespace std;
+#include <chrono>
+#include <memory>
+#include <algorithm>
 
-class lazy_char;
 
 class lazy_string {
-	char* s;
+	struct lazy_char {
+		lazy_string* host_str;
+		size_t pos;
+		lazy_char(lazy_string*, size_t);
+		operator char() const;
+		lazy_char& operator=(char c) ;
+	};
+	std::shared_ptr<std::string> str;
+	size_t start;
 	size_t len;
-	bool has_reference;	//true iff this->s points to memory of another instance
-	lazy_string(char *s, size_t len, bool);
+	lazy_string(std::shared_ptr<std::string>,
+		size_t, size_t len);
 public:
 	lazy_string(std::string);
-	lazy_string(const lazy_string& );
-	size_t size();
-	size_t length();
+	// lazy_string(const lazy_string& );
+	size_t size() const;
+	size_t length() const;
 	lazy_char at(size_t);
-	lazy_char operator[](size_t) const;
-	lazy_string substr(size_t pos, size_t len);
-	operator std::string();
-	lazy_string& operator=(const lazy_string &source);
-	~lazy_string();
+	lazy_char operator[](size_t);
+	lazy_string substr(size_t pos, size_t len) const;
+	operator std::string() const;
 	friend class lazy_char;
-	friend istream& operator>>(istream&, lazy_string&);
-	friend ostream& operator<<(ostream&, lazy_string&);
-};
-
-struct lazy_char {
-	lazy_string* host_str;
-	size_t pos;
-	lazy_char(lazy_string*, size_t);
-	operator char();
-	lazy_char& operator=(char c);
-	friend std::ostream& operator<<(std::ostream&, lazy_char);
+	friend std::istream& operator>>(std::istream&, lazy_string&);
+	friend std::ostream& operator<<(std::ostream&, lazy_string&);
 };
 
 #endif //ITMO_CPP_LAZY_STRING_H

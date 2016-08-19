@@ -22,8 +22,6 @@ void rw_lock::read_unlock() {
 void rw_lock::write_lock() {
 	mutex.try_lock();
 	while(n_readers.load() > 0) {
-		std::cout << n_readers.load();
-		fflush(stdout);
 		std::this_thread::yield();
 	}
 }
@@ -83,7 +81,7 @@ size_t lazy_string::size() const {
 
 
 lazy_string::lazy_char lazy_string::operator[](size_t pos) {
-	return lazy_char(this, pos);;
+	return lazy_char(this, pos);
 }
 
 lazy_string::lazy_char lazy_string::at(size_t pos) {

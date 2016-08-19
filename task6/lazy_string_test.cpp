@@ -4,19 +4,6 @@
 #include <thread>
 #include <mutex>
 
-void ls_write(lazy_string& ls) {
-	ls[0] = 'o';
-}
-
-void ls_read(lazy_string& ls) {
-	std::cout << ls << std::endl;
-}
-
-void fun(std::string ls) {
-	std::cout << ls.length() << std::endl;
-	std::cout << ls << std::endl;
-}
-
 int main(int argc, char const *argv[]) {
 	try {
 		std::string str = "abacaba";
@@ -27,7 +14,7 @@ int main(int argc, char const *argv[]) {
 		t = s;
 		s[4] = 'o';
 		std::cout << t << ' ' << s << std::endl;
-		lazy_char lc = s[1];
+		// lazy_char lc = s[1];
 		t[3] = 'd';
 		lazy_string r = t.substr(1, 4);
 		std::cout << r << std::endl;
