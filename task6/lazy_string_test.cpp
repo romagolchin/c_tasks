@@ -1,57 +1,40 @@
-#include "lazy_string.cpp"
+#include "lazy_string.h"
+#include <stdlib.h>
+#include <vector>
+#include <thread>
+#include <mutex>
+
+void ls_write(lazy_string& ls) {
+	ls[0] = 'o';
+}
+
+void ls_read(lazy_string& ls) {
+	std::cout << ls << std::endl;
+}
+
+void fun(std::string ls) {
+	std::cout << ls.length() << std::endl;
+	std::cout << ls << std::endl;
+}
 
 int main(int argc, char const *argv[]) {
-	using namespace std;
-	string str = "abacaba";
-	string astr = "e";
-	lazy_string s(str);
-	s.out();
-	s[4] = 'o';
-	lazy_string t(astr);
-	// printf("%p\n", t.get_s());
-	t = s;
-	lazy_char lc = s[1];
-	// for(int i = 0; i < t.size(); ++i)
-	// 	printf("%c", (char) t[i]);
-	// printf("\n");
-
-	// cout << t[1] << endl;
-	// printf("%p %p\n", t.get_s(), s.get_s());
-	t[3] = 'd';
-	// printf("%p %p\n", t.get_s(), s.get_s());
-	// (t.substr(1, 4)).out();
-
-	// try {
-	// 	lazy_string r(t.substr(1, 4));
-	// }
-	// catch (const length_error le) {
-	// 	cerr << le.what() << endl;
-	// }
-	cerr << "Expected" << endl;
-	// (lazy_string(t.get_s() + 1, 4, 1)).out();
-	cerr << "Reality" << endl;
-	// lazy_string r = t;
-	// const lazy_string& ref = t.substr(1, 4);
-	// lazy_string r (ref);
-	lazy_string r = t.substr(1, 4);
-	r.out();
-	cerr << (string) r;// << ' ' << s << ' ' << t <<  endl;
-	// printf("%p %p\n", t.get_s(), r.get_s());
-	// printf("%c\n", (char) t[2]);
-	// printf("%c\n", (char) t[3]);
-	// printf("%d\n", (int) t.size());
-	// lazy_string as("");
-	// cin >> as;
-	// cout << as;
-	// string my_str = (string) r;
-	// cout << my_str << endl;
-	// r.out();
-	// printf("%c\n", (char) r[3]);
-	// try {
-	// 	printf("%c\n", (char) r.at(4));
-	// }
-	// catch(const out_of_range& oor) {
-	// 	cerr << oor.what() << endl;
-	// }
+	try {
+		std::string str = "abacaba";
+		std::string astr = "e";
+		lazy_string s(str);
+		
+		lazy_string t(astr);
+		t = s;
+		s[4] = 'o';
+		std::cout << t << ' ' << s << std::endl;
+		lazy_char lc = s[1];
+		t[3] = 'd';
+		lazy_string r = t.substr(1, 4);
+		std::cout << r << std::endl;
+		std::cerr << (std::string) r << std::endl;
+	}
+	catch(const std::exception& e) {
+		std::cout << e.what() << std::endl;
+	}
 	return 0;
 }

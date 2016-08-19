@@ -5,11 +5,6 @@ lazy_char::lazy_char(lazy_string* hs, size_t pos) :
 	host_str(hs), pos(pos)
 {}
 
-//?!!!
-lazy_char::~lazy_char() {
-
-}
-
 lazy_char::operator char() {
 	return *(host_str->s + pos);
 }
@@ -35,7 +30,6 @@ std::ostream& operator<<(std::ostream& stream, lazy_char lc) {
 lazy_string::lazy_string(std::string str) {
 	len = str.length();
 	s = new char[len + 1];
-	assert(s);
 	for (size_t i = 0; i < len; ++i)
 		s[i] = str[i];
 	s[len] = '\0';
@@ -44,24 +38,23 @@ lazy_string::lazy_string(std::string str) {
 
 lazy_string::lazy_string(char *s, size_t len, bool has_reference):
 	s(s), len(len), has_reference(has_reference)
-{	}
+{}
 
 lazy_string::lazy_string(const lazy_string& source) {
-	using namespace std;
+	cout << "copy constructor" << endl;
 	s = source.s;
 	len = source.len;
 	has_reference = 1;
 }
 
-lazy_string& lazy_string::operator=(lazy_string& source) {
-	using namespace std;
-	if (s) {
+lazy_string& lazy_string::operator=(const lazy_string& source) {
+	cout << "assignment" << endl;
+	if (!has_reference) {
 		delete [] s;
 	}
 	s = source.s;
 	len = source.len;
 	has_reference = 1;
-	this->out();
 	return *this;
 }
 
@@ -69,7 +62,7 @@ size_t lazy_string::length() {return len; }
 size_t lazy_string::size() {return len; }
 
 
-lazy_char lazy_string::operator[](size_t pos) {
+lazy_char lazy_string::operator[](size_t pos) const {
 	return lazy_char(this, pos);
 }
 
