@@ -214,10 +214,12 @@ string format_impl(format_properties& props, string const &tail, Arg arg, Args..
 	size_t num_chars;
 	switch (tolower(props.spec)) {
 		case 'c': {
-			if(props.len == "l")
-				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<wint_t>(arg));
-			else if(props.len == "")
+			if(props.len == "")
 				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<int>(arg));
+			else if(props.len == "l")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<wint_t>(arg));
+			else
+				throw invalid_argument("unknown length modifier");
 			res = string(buf);
 			break;
 		} 	
@@ -227,17 +229,52 @@ string format_impl(format_properties& props, string const &tail, Arg arg, Args..
 				res = "";
 				break;
 			}
-			num_chars = snprintf(buf, buf_sz, fmt.c_str(), new_arg);
+			if(props.len == "hh")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<signed char>(arg));
+			else if(props.len == "h")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<short>(arg));
+			else if(props.len == "")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<int>(arg));
+			else if(props.len == "l")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<long>(arg));
+			else if(props.len == "ll")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<long long>(arg));
+			else if(props.len == "j")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<intmax_t>(arg));
+			else if(props.len == "z")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<signed size_t>(arg));
+			else if(props.len == "t")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<ptrdiff_t>(arg));
+			else 
+				throw invalid_argument("unknown length modifier");	
 			res = string(buf);
 			break; 
 		}
 		case 'x': case 'o': case 'u': {
-			ull new_arg = cast<ull>(arg);
-			num_chars = snprintf(buf, buf_sz, fmt.c_str(), new_arg);
+			if(props.len == "hh")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<unsigned char>(arg));
+			else if(props.len == "h")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<unsigned short>(arg));
+			else if(props.len == "")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<unsigned int>(arg));
+			else if(props.len == "l")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<unsigned long>(arg));
+			else if(props.len == "ll")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<unsigned long long>(arg));
+			else if(props.len == "j")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<uintmax_t>(arg));
+			else if(props.len == "z")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<unsigned size_t>(arg));
+			else if(props.len == "t")
+				num_chars = snprintf(buf, buf_sz, fmt.c_str(), cast<size_t>(arg));
+			else 
+				throw invalid_argument("unknown length modifier");
 			res = string(buf);
 			break;
 		}
 		case 'f': case 'g': case 'e': case 'a': {
+			if(props.len != "" && props.len != "l")
+				throw invalid_argument("unknown length modifier");
 			double new_arg = cast<double>(arg);
 			num_chars = snprintf(buf, buf_sz, fmt.c_str(), new_arg);
 			res = string(buf);
@@ -273,16 +310,30 @@ string format_impl(format_properties& props, string const &tail, Arg arg, Args..
 			if(new_arg)
 				res = string(new_arg);
 			if(props.precision != Precision::none) {
-				//cerr << props.prec_num << ' ' << res.length() << endl;
 				res = res.substr(0, min(props.prec_num, (int) res.length()));
 			}
 			num_chars = res.length();
 			break;
 		}
 		case 'n': {
-			if(props.len == "") {
+			if(props.len == "hh")
+				*(cast<signed char*>(arg)) = Counter::cnt;
+			else if(props.len == "h") 
+				*(cast<short*>(arg)) = Counter::cnt;
+			else if(props.len == "") 
 				*(cast<int*>(arg)) = Counter::cnt;
-			}
+			else if(props.len == "l") 
+				*(cast<long*>(arg)) = Counter::cnt;
+			else if(props.len == "ll") 
+				*(cast<long long*>(arg)) = Counter::cnt;
+			else if(props.len == "j") 
+				*(cast<intmax_t*>(arg)) = Counter::cnt;
+			else if(props.len == "z") 
+				*(cast<signed size_t*>(arg)) = Counter::cnt;
+			else if(props.len == "t") 
+				*(cast<ptrdiff_t*>(arg)) = Counter::cnt;
+			else
+				throw invalid_argument("unknown length modifier");
 			break;
 		}
 		case '@': {
