@@ -1,0 +1,13 @@
+1 process 0 3
+1 process 1 2
+1 process 2 3
+2 process 0 1
+1 process 2 3
+1 process 3 2
+1 2
+1 2
+1 process 4 2
+2 process 2 2
+1 process 5 1
+2 process 3 3
+1 process 6 3

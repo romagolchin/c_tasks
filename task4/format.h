@@ -129,8 +129,6 @@ string format(const string &fmt, Arg arg, Arg1 arg1, Arg2 arg2, Args... args) {
 
 template <class Arg, class... Args>
 string format_impl(format_properties& props, string const &tail, Arg arg, Args... args) {
-	// cerr << __PRETTY_FUNCTION__ << endl;
-	//cerr << props.spec << ' ' << arg << endl;
 	string res;
 	normalize_props(props);
 	string fmt = "%";

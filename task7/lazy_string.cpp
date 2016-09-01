@@ -2,6 +2,11 @@
 
 std::mutex share_stream::mx;
 
+void bp(int n) {
+	// std::cout << n << std::endl;
+	fflush(stdout);
+}
+
 rw_lock::rw_lock(): n_readers(0)
 {}
 
@@ -9,7 +14,6 @@ rw_lock::rw_lock(const rw_lock&): n_readers(0)
 {}
 
 void rw_lock::read_lock() {
-	// std::cout << mutex.try_lock() << std::endl;
 	mutex.lock();
 	n_readers++;
 	mutex.unlock();
@@ -20,8 +24,8 @@ void rw_lock::read_unlock() {
 }
 
 void rw_lock::write_lock() {
-	mutex.try_lock();
-	while(n_readers.load() > 0) {
+	mutex.lock();
+	while (n_readers.load() > 0) {
 		std::this_thread::yield();
 	}
 }
@@ -39,17 +43,26 @@ lazy_string::lazy_char::operator char() const {
 }
 
 lazy_string::lazy_char& lazy_string::lazy_char::operator=(char c) {
+	bp(0);
 	host_str->lock->write_lock();
+	bp(1);
 	std::shared_ptr<rw_lock> old_lock = host_str->lock;
+	bp(2);
 	if (host_str->str.use_count() > 1) {
+		bp(-1);
+		// host_str->str = std::make_shared<std::string>(
+		// 	lazy_string(host_str->str, host_str->lock, host_str->start, host_str->len)
+		// 	.str->substr(host_str->start, host_str->len));
 		host_str->str = std::make_shared<std::string>(
-			lazy_string(host_str->str, host_str->lock, host_str->start, host_str->len)
-			.str->substr(host_str->start, host_str->len));
+		                    host_str->str->substr(host_str->start, host_str->len));
 		host_str->start = 0;
 		host_str->lock = std::make_shared<rw_lock>();
 	}
 	(*host_str->str)[host_str->start + pos] = c;
+	bp(3);
 	old_lock->write_unlock();
+	bp(4);
+
 	return *this;
 }
 
@@ -106,7 +119,7 @@ lazy_string lazy_string::substr(size_t pos, size_t len) const {
 	if (pos >= this->len)
 		throw std::out_of_range("start position of substring is out of range\n");
 	lazy_string res(str, lock, start + pos, std::min(this->len - pos, len));
-	lock->read_unlock(); 
+	lock->read_unlock();
 	return res;
 }
 
